@@ -1,0 +1,2232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FeedForward — Smart Food Redistribution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #FC6B1A;
+      --orange-d: #E55A08;
+      --orange-l: #FFF0E8;
+      --navy: #111827;
+      --navy-2: #1F2937;
+      --green: #16A34A;
+      --green-l: #DCFCE7;
+      --yellow: #D97706;
+      --yellow-l: #FEF3C7;
+      --blue: #2563EB;
+      --purple: #7C3AED;
+      --white: #FFFFFF;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .06);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, .08), 0 2px 6px rgba(0, 0, 0, .05);
+      --shadow-lg: 0 10px 40px rgba(0, 0, 0, .1), 0 4px 12px rgba(0, 0, 0, .06);
+      --shadow-orange: 0 6px 24px rgba(252, 107, 26, .35);
+      --font-head: 'Manrope', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    #about,
+    #announcements,
+    #contact {
+      scroll-margin-top: 68px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--white);
+      color: var(--navy);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--orange);
+      border-radius: 4px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--orange-l);
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      border: 1px solid rgba(252, 107, 26, .2);
+    }
+
+    .tag-pill .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .4;
+        transform: scale(1.4)
+      }
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--orange-l);
+      color: var(--orange);
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+
+    .section-h2 {
+      font-family: var(--font-head);
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+
+    .section-h2 .hl {
+      color: var(--orange);
+    }
+
+    .section-lead {
+      font-size: 16px;
+      color: var(--gray-500);
+      line-height: 1.75;
+      max-width: 560px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .22s;
+      border: none;
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: #fff;
+      padding: 13px 30px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      box-shadow: var(--shadow-orange);
+    }
+
+    .btn-orange:hover {
+      background: var(--orange-d);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(252, 107, 26, .45);
+    }
+
+    .btn-ghost {
+      background: var(--gray-100);
+      color: var(--navy);
+      padding: 11px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+    }
+
+    .btn-ghost:hover {
+      background: var(--gray-200);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal.vis {
+      opacity: 1;
+      transform: none;
+    }
+
+    .reveal-l {
+      opacity: 0;
+      transform: translateX(-24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal-l.vis {
+      opacity: 1;
+      transform: none;
+    }
+
+    .reveal-r {
+      opacity: 0;
+      transform: translateX(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal-r.vis {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* NAVBAR */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 68px;
+      background: rgba(255, 255, 255, .97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--gray-200);
+      transition: box-shadow .3s;
+    }
+
+    #navbar.scrolled {
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav-inner {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--orange);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(252, 107, 26, .3);
+    }
+
+    .nav-logo-text {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .nav-logo-text span {
+      color: var(--orange);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .nav-links a {
+      padding: 8px 15px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-500);
+      transition: all .18s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--orange);
+      background: var(--orange-l);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn-donate {
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--orange);
+      background: var(--orange-l);
+      border: 1.5px solid rgba(252, 107, 26, .22);
+      transition: all .18s;
+    }
+
+    .nav-btn-donate:hover {
+      background: rgba(252, 107, 26, .18);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      border: none;
+      background: transparent;
+    }
+
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--navy);
+      border-radius: 2px;
+      transition: all .3s;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 12px 24px 20px;
+      flex-direction: column;
+      gap: 2px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-500);
+      transition: all .18s;
+    }
+
+    .mobile-menu a:hover {
+      background: var(--gray-50);
+      color: var(--orange);
+    }
+
+    .mobile-menu .mob-divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 8px 0;
+    }
+
+    .mobile-menu .mob-cta {
+      background: var(--orange);
+      color: #fff !important;
+      text-align: center;
+      border-radius: 11px;
+      font-weight: 700 !important;
+      margin-top: 6px;
+      box-shadow: 0 4px 14px rgba(252, 107, 26, .3);
+    }
+
+    /* SLIDESHOW */
+    #slideshow {
+      margin-top: 68px;
+      position: relative;
+      overflow: hidden;
+      height: 360px;
+    }
+
+    @media(max-width: 900px) {
+      #slideshow {
+        height: 320px;
+      }
+    }
+
+    @media(max-width: 600px) {
+      #slideshow {
+        height: 280px;
+      }
+    }
+
+    @media(max-width: 400px) {
+      #slideshow {
+        height: 260px;
+      }
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transition: opacity .7s ease;
+      padding: 0;
+    }
+
+    .slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .slide-bg-1 {
+      background: linear-gradient(120deg, #111827 0%, #1e2a45 55%, #16213E 100%);
+    }
+
+    .slide-bg-2 {
+      background: linear-gradient(120deg, #0d1f0d 0%, #1a3020 55%, #0f1f10 100%);
+    }
+
+    .slide-bg-3 {
+      background: linear-gradient(120deg, #1a0e0a 0%, #2e1910 55%, #18100a 100%);
+    }
+
+    .slide-bg-4 {
+      background: linear-gradient(120deg, #0a0f1e 0%, #101a35 55%, #0a0d20 100%);
+    }
+
+    .slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 80% 50%, rgba(252, 107, 26, .12) 0%, transparent 55%), radial-gradient(circle at 10% 80%, rgba(255, 255, 255, .03) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .slide-container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .slide-body {
+      flex: 1;
+    }
+
+    .slide-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(252, 107, 26, .15);
+      border: 1px solid rgba(252, 107, 26, .3);
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    .slide-tag .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    .slide-h1 {
+      font-family: var(--font-head);
+      font-size: clamp(28px, 4.5vw, 58px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .slide-h1 .hl {
+      color: var(--orange);
+    }
+
+    .slide-p {
+      font-size: clamp(13px, 1.6vw, 16px);
+      color: rgba(255, 255, 255, .62);
+      line-height: 1.75;
+      margin-bottom: 28px;
+      max-width: 460px;
+    }
+
+    .slide-emoji {
+      font-size: clamp(80px, 12vw, 150px);
+      flex-shrink: 0;
+      filter: drop-shadow(0 8px 28px rgba(252, 107, 26, .35));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-14px)
+      }
+    }
+
+    .slide-controls {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .sdot {
+      width: 8px;
+      height: 8px;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, .28);
+      cursor: pointer;
+      transition: all .3s;
+      border: none;
+    }
+
+    .sdot.active {
+      width: 28px;
+      background: var(--orange);
+    }
+
+    .slide-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: rgba(255, 255, 255, .1);
+      color: #fff;
+      font-size: 20px;
+      backdrop-filter: blur(8px);
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-arrow:hover {
+      background: rgba(252, 107, 26, .6);
+    }
+
+    .slide-arrow-prev {
+      left: 18px;
+    }
+
+    .slide-arrow-next {
+      right: 18px;
+    }
+
+    @media(max-width: 580px) {
+      .slide-emoji {
+        display: none;
+      }
+
+      .slide-container {
+        padding: 0 20px;
+      }
+
+      .slide-arrow {
+        display: none;
+      }
+
+      .slide-tag {
+        margin-bottom: 8px;
+        font-size: 10px;
+        padding: 4px 10px;
+      }
+
+      .slide-h1 {
+        margin-bottom: 8px;
+        font-size: 22px !important;
+        line-height: 1.2;
+      }
+
+      .slide-p {
+        margin-bottom: 12px;
+        line-height: 1.4;
+        font-size: 12px;
+      }
+
+      .slide-body .btn {
+        padding: 9px 18px;
+        font-size: 13px;
+      }
+    }
+
+    /* MAIN HEADING */
+    #main-heading {
+      background: var(--white);
+      padding: 88px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .mh-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    @media(max-width: 900px) {
+      .mh-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    .mh-h1 {
+      font-family: var(--font-head);
+      font-size: clamp(32px, 4.5vw, 58px);
+      font-weight: 900;
+      line-height: 1.08;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+
+    .mh-h1 .hl {
+      color: var(--orange);
+    }
+
+    .mh-p {
+      font-size: 17px;
+      color: var(--gray-500);
+      line-height: 1.8;
+      margin-bottom: 36px;
+      max-width: 500px;
+    }
+
+    .mh-btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .mh-right {
+      display: flex;
+      justify-content: center;
+    }
+
+    .orphan-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .orphan-circle {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 24px 64px rgba(252, 107, 26, .22), 0 0 0 10px rgba(252, 107, 26, .07), 0 0 0 20px rgba(252, 107, 26, .03);
+      background: linear-gradient(135deg, #FFF0E8 0%, #FFDCC4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media(max-width: 600px) {
+      .orphan-circle {
+        width: 240px;
+        height: 240px;
+      }
+    }
+
+    @media(max-width: 900px) {
+      .mh-right {
+        justify-content: flex-start;
+      }
+    }
+
+    .orphan-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .orphan-circle::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(circle at 50% 40%, rgba(252, 107, 26, .08) 0%, rgba(252, 107, 26, .18) 100%);
+    }
+
+    .orphan-emoji {
+      font-size: 80px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .orphan-label {
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--orange);
+      padding: 7px 20px;
+      border-radius: 100px;
+      box-shadow: 0 4px 14px rgba(252, 107, 26, .35);
+    }
+
+    .stat-badge {
+      position: absolute;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+      box-shadow: var(--shadow-md);
+      white-space: nowrap;
+      z-index: 3;
+      border: 1px solid var(--gray-100);
+    }
+
+    .sb-1 {
+      top: -14px;
+      right: 8px;
+      color: var(--orange);
+    }
+
+    .sb-2 {
+      bottom: -8px;
+      left: -14px;
+      color: var(--green);
+    }
+
+    .sb-3 {
+      top: 50%;
+      right: -24px;
+      transform: translateY(-50%);
+      color: var(--purple);
+    }
+
+    /* ABOUT */
+    #about {
+      background: var(--gray-50);
+      padding: 88px 0;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 64px;
+    }
+
+    @media(max-width: 1024px) {
+      .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 560px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 26px 22px;
+      transition: all .28s;
+    }
+
+    .info-card:hover {
+      border-color: rgba(252, 107, 26, .28);
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(252, 107, 26, .1);
+    }
+
+    .ic-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    .ic-title {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .ic-desc {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.7;
+    }
+
+    .how-title {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-bottom: 48px;
+      position: relative;
+    }
+
+    @media(max-width: 768px) {
+      .flow-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    .flow-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      padding: 32px 26px;
+      position: relative;
+      overflow: hidden;
+      transition: all .28s;
+    }
+
+    .flow-card:first-child {
+      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    }
+
+    .flow-card:last-child {
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    }
+
+    @media(max-width: 768px) {
+
+      .flow-card:first-child,
+      .flow-card:last-child,
+      .flow-card {
+        border-radius: var(--radius-lg) !important;
+      }
+    }
+
+    .flow-card:hover {
+      background: #FFFCFA;
+      border-color: rgba(252, 107, 26, .28);
+      transform: translateY(-4px);
+      z-index: 1;
+      box-shadow: 0 12px 32px rgba(252, 107, 26, .12);
+    }
+
+    .fc-n {
+      font-family: var(--font-head);
+      font-size: 72px;
+      font-weight: 900;
+      color: rgba(17, 24, 39, .05);
+      position: absolute;
+      right: 12px;
+      top: 4px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .fc-arrow {
+      position: absolute;
+      top: 50%;
+      right: -16px;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      z-index: 2;
+      box-shadow: 0 4px 12px rgba(252, 107, 26, .4);
+    }
+
+    @media(max-width: 768px) {
+      .fc-arrow {
+        display: none;
+      }
+    }
+
+    .flow-card:last-child .fc-arrow {
+      display: none;
+    }
+
+    .fc-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 18px;
+    }
+
+    .fc-title {
+      font-family: var(--font-head);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 9px;
+    }
+
+    .fc-desc {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.7;
+    }
+
+    .fc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 14px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .track-panel {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      margin-bottom: 32px;
+    }
+
+    .tp-title {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .tp-sub {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin-bottom: 32px;
+    }
+
+    .track-row {
+      display: flex;
+      align-items: flex-start;
+      overflow-x: auto;
+      gap: 0;
+      padding-bottom: 6px;
+    }
+
+    .t-step {
+      flex: 1;
+      min-width: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .t-step::after {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 54%;
+      width: 92%;
+      height: 2px;
+      background: var(--gray-200);
+      transition: background .5s;
+    }
+
+    .t-step:last-child::after {
+      display: none;
+    }
+
+    .t-step.t-done::after {
+      background: var(--orange);
+    }
+
+    .t-dot {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--gray-200);
+      background: var(--white);
+      transition: all .4s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .t-step.t-done .t-dot {
+      border-color: var(--orange);
+      background: var(--orange-l);
+    }
+
+    .t-step.t-active .t-dot {
+      border-color: var(--orange);
+      background: var(--orange);
+      color: #fff;
+      box-shadow: 0 0 0 5px rgba(252, 107, 26, .15), 0 4px 16px rgba(252, 107, 26, .4);
+      animation: tdPulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes tdPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 5px rgba(252, 107, 26, .15), 0 4px 16px rgba(252, 107, 26, .4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 10px rgba(252, 107, 26, .08), 0 4px 24px rgba(252, 107, 26, .55);
+      }
+    }
+
+    .t-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    .t-step.t-active .t-lbl {
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    .t-step.t-done .t-lbl {
+      color: var(--navy);
+    }
+
+    .live-panel {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      background: linear-gradient(120deg, var(--navy) 0%, #1e2a45 100%);
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      color: #fff;
+    }
+
+    .lp-icon {
+      width: 58px;
+      height: 58px;
+      background: rgba(252, 107, 26, .2);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .lp-text h3 {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .lp-text p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .55);
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    .lp-badge {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(22, 163, 74, .15);
+      border: 1px solid rgba(22, 163, 74, .3);
+      padding: 8px 16px;
+      border-radius: 100px;
+      flex-shrink: 0;
+    }
+
+    .lp-badge .ldot {
+      width: 8px;
+      height: 8px;
+      background: #4ADE80;
+      border-radius: 50%;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    .lp-badge span {
+      font-size: 13px;
+      font-weight: 700;
+      color: #4ADE80;
+    }
+
+    @media(max-width: 640px) {
+      .lp-badge {
+        margin-left: 0;
+      }
+
+      .live-panel {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* ANNOUNCEMENTS */
+    #announcements {
+      background: var(--white);
+      padding: 88px 0;
+      overflow: hidden;
+    }
+
+    .ticker-outer {
+      position: relative;
+      background: var(--navy);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+
+    .ticker-label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+      background: var(--orange);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      font-family: var(--font-head);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+      box-shadow: 4px 0 16px rgba(252, 107, 26, .4);
+    }
+
+    .ticker-track {
+      display: flex;
+      animation: scrollTicker 30s linear infinite;
+      padding: 15px 0 15px 148px;
+      white-space: nowrap;
+    }
+
+    .ticker-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scrollTicker {
+      0% {
+        transform: translateX(0)
+      }
+
+      100% {
+        transform: translateX(-50%)
+      }
+    }
+
+    .ti {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 36px;
+      border-right: 1px solid rgba(255, 255, 255, .08);
+      font-size: 13px;
+      color: rgba(255, 255, 255, .72);
+      font-weight: 500;
+    }
+
+    .ti .td {
+      width: 5px;
+      height: 5px;
+      background: var(--orange);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .ti-badge {
+      background: rgba(252, 107, 26, .2);
+      color: var(--orange);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
+    }
+
+    @media(max-width: 600px) {
+      .ticker-label {
+        position: relative;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        padding: 10px 22px;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .ticker-track {
+        padding: 12px 16px;
+      }
+    }
+
+    .ann-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media(max-width: 900px) {
+      .ann-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 560px) {
+      .ann-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ann-card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: all .28s;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .ann-card.ann-in {
+      opacity: 1;
+      transform: none;
+    }
+
+    .ann-card:hover {
+      border-color: rgba(252, 107, 26, .25);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(252, 107, 26, .09);
+    }
+
+    .ann-pill {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      padding: 4px 10px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+    }
+
+    .ann-title {
+      font-family: var(--font-head);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .ann-body {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.68;
+    }
+
+    .ann-date {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 12px;
+      font-weight: 500;
+    }
+
+    /* CONTACT */
+    #contact {
+      background: var(--gray-50);
+      padding: 88px 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
+      align-items: start;
+      margin-top: 44px;
+    }
+
+    @media(max-width: 860px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ci-items {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      margin-bottom: 24px;
+    }
+
+    .ci-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      transition: all .22s;
+    }
+
+    .ci-item:hover {
+      border-color: rgba(252, 107, 26, .28);
+      transform: translateX(4px);
+    }
+
+    .ci-ico {
+      width: 42px;
+      height: 42px;
+      background: var(--orange-l);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+
+    .ci-lbl {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 2px;
+    }
+
+    .ci-val {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    a.ci-val:hover {
+      color: var(--orange);
+    }
+
+    .join-cta-box {
+      background: linear-gradient(120deg, var(--navy), #1e2a45);
+      border-radius: var(--radius-lg);
+      padding: 24px 26px;
+      color: #fff;
+    }
+
+    .join-cta-box h4 {
+      font-family: var(--font-head);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .join-cta-box p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .5);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .cf-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      padding: 38px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cf-head {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .cf-sub {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin-bottom: 28px;
+    }
+
+    .fg {
+      margin-bottom: 16px;
+    }
+
+    .fl {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+
+    .fi {
+      width: 100%;
+      background: var(--gray-50);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 12px 15px;
+      font-size: 14px;
+      color: var(--navy);
+      font-family: var(--font-body);
+      outline: none;
+      transition: all .2s;
+    }
+
+    .fi:focus {
+      border-color: var(--orange);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(252, 107, 26, .1);
+    }
+
+    .fi::placeholder {
+      color: var(--gray-400);
+    }
+
+    textarea.fi {
+      resize: vertical;
+      min-height: 108px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media(max-width: 460px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn-send {
+      width: 100%;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: var(--font-body);
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(252, 107, 26, .3);
+      transition: all .22s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-send:hover {
+      background: var(--orange-d);
+      transform: translateY(-2px);
+    }
+
+    .btn-send:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-ok {
+      display: none;
+      background: var(--green-l);
+      border: 1px solid rgba(22, 163, 74, .25);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      text-align: center;
+      color: var(--green);
+      font-weight: 700;
+      font-size: 14px;
+      margin-top: 14px;
+      animation: fadeUp .4s ease;
+    }
+
+    .form-ok.show {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy);
+      color: rgba(255, 255, 255, .5);
+      padding: 32px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .fl-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .fl-ico {
+      width: 34px;
+      height: 34px;
+      background: var(--orange);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .fl-name {
+      font-family: var(--font-head);
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .fl-copy {
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .fl-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .fl-links a {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .4);
+      transition: color .18s;
+    }
+
+    .fl-links a:hover {
+      color: var(--orange);
+    }
+
+    @media(max-width: 640px) {
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .fl-links {
+        justify-content: center;
+      }
+    }
+
+    @media(max-width: 768px) {
+
+      .nav-links,
+      .nav-actions {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      #main-heading,
+      #about,
+      #announcements,
+      #contact {
+        padding: 64px 0;
+      }
+    }
+
+    @media(max-width: 480px) {
+      .mh-btn-row {
+        flex-direction: column;
+      }
+
+      .mh-btn-row .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="nav-logo">
+          <div class="nav-logo-icon">🌱</div>
+          <div class="nav-logo-text">Feed<span>Forward</span></div>
+        </div>
+        <div class="nav-links">
+          <a href="#" class="active">Home</a>
+          <a href="#about">About Us</a>
+          <a href="#announcements">Announcements</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="nav-actions">
+          <a href="https://feedforward-web-client.onrender.com/login" class="nav-btn-donate">Donate Now</a>
+        </div>
+        <button class="hamburger" id="ham" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobMenu">
+    <a href="#">🏠 Home</a>
+    <a href="#about">💡 About Us</a>
+    <a href="#announcements">📢 Announcements</a>
+    <a href="#contact">✉️ Contact</a>
+    <div class="mob-divider"></div>
+    <a href="https://feedforward-web-client.onrender.com/login" class="mob-cta">🚀 Get Started Free</a>
+  </div>
+
+  <div id="slideshow">
+    <div class="slide slide-bg-1 active">
+      <div class="slide-container">
+        <div class="slide-body">
+          <div class="slide-tag"><span class="dot"></span>Smart Food Redistribution</div>
+          <h1 class="slide-h1">Every meal saved is<br><span class="hl">a life changed</span></h1>
+          <p class="slide-p">Connecting food donors, NGOs, and delivery agents to eliminate food waste and nourish
+            communities.</p>
+          <a href="https://feedforward-web-client.onrender.com/login" class="btn btn-orange">🚀 Get Started Free</a>
+        </div>
+        <div class="slide-emoji"><img src="image1.png" alt="Slide 1 Image"
+            style="max-height: 240px; width: auto; object-fit: contain;" /></div>
+      </div>
+    </div>
+    <div class="slide slide-bg-2">
+      <div class="slide-container">
+        <div class="slide-body">
+          <div class="slide-tag"><span class="dot"></span>For Food Donors</div>
+          <h1 class="slide-h1">Post surplus food<br><span class="hl">in 60 seconds</span></h1>
+          <p class="slide-p">Have leftover food? Post it in under a minute with GPS location. NGOs will collect it fast.
+          </p>
+          <a href="https://feedforward-web-client.onrender.com/login" class="btn btn-orange">🤲 Donate Food</a>
+        </div>
+        <div class="slide-emoji"><img src="image2.png" alt="Slide 2 Image"
+            style="max-height: 240px; width: auto; object-fit: contain;" /></div>
+      </div>
+    </div>
+    <div class="slide slide-bg-3">
+      <div class="slide-container">
+        <div class="slide-body">
+          <div class="slide-tag"><span class="dot"></span>Live GPS Tracking</div>
+          <h1 class="slide-h1">Track every delivery<br><span class="hl">in real-time</span></h1>
+          <p class="slide-p">Watch your agent navigate live on the map. Real route, real ETA — donor and admin see it
+            together.</p>
+          <a href="https://feedforward-web-client.onrender.com/login" class="btn btn-orange">📍 See Live Map</a>
+        </div>
+        <div class="slide-emoji">🗺️</div>
+      </div>
+    </div>
+    <div class="slide slide-bg-4">
+      <div class="slide-container">
+        <div class="slide-body">
+          <div class="slide-tag"><span class="dot"></span>Reward Points</div>
+          <h1 class="slide-h1">Earn rewards for<br><span class="hl">every donation</span></h1>
+          <p class="slide-p">Climb from Seed to Legend. Every meal you donate earns points and recognition from the
+            community.</p>
+          <a href="https://feedforward-web-client.onrender.com/login" class="btn btn-orange">⭐ Start Earning</a>
+        </div>
+        <div class="slide-emoji">⭐</div>
+      </div>
+    </div>
+    <button class="slide-arrow slide-arrow-prev" onclick="prevSlide()" aria-label="Previous">&#8249;</button>
+    <button class="slide-arrow slide-arrow-next" onclick="nextSlide()" aria-label="Next">&#8250;</button>
+    <div class="slide-controls">
+      <button class="sdot active" onclick="goTo(0)" aria-label="Slide 1"></button>
+      <button class="sdot" onclick="goTo(1)" aria-label="Slide 2"></button>
+      <button class="sdot" onclick="goTo(2)" aria-label="Slide 3"></button>
+      <button class="sdot" onclick="goTo(3)" aria-label="Slide 4"></button>
+    </div>
+  </div>
+
+  <section id="main-heading">
+    <div class="container">
+      <div class="mh-grid">
+        <div class="reveal-l">
+          <div class="section-label">🌍 Making a Real Difference</div>
+          <h1 class="mh-h1">Feed the hungry,<br><span class="hl">reduce waste</span>,<br>change lives.</h1>
+          <p class="mh-p">FeedForward connects surplus food with people in need, reducing food waste and helping fight
+            hunger.</p>
+          <div class="mh-btn-row">
+            <a href="https://feedforward-web-client.onrender.com/login" class="btn btn-orange">🍲 Donate Now</a>
+            <a href="#about" class="btn btn-ghost">Learn How It Works</a>
+          </div>
+        </div>
+        <div class="mh-right reveal-r">
+          <img src="image.webp" alt="FeedForward Stats"
+            style="width: 100%; max-width: 500px; height: auto; object-fit: contain;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">About FeedForward</div>
+        <h2 class="section-h2">About <span class="hl">Us</span></h2>
+        <p class="section-lead" style="margin-bottom:52px">FeedForward is a smart food redistribution platform
+          connecting food donors, NGO admins, and delivery agents — saving meals, saving lives.</p>
+      </div>
+      <div class="how-title reveal">📌 Some Information</div>
+      <div class="info-grid">
+        <div class="info-card reveal" style="transition-delay:.04s">
+          <div class="ic-icon" style="background:rgba(252,107,26,.1)">🌍</div>
+          <div class="ic-title">Our Mission</div>
+          <div class="ic-desc">Zero food waste, zero hunger. Every surplus meal deserves to reach a plate — not a
+            landfill. FeedForward makes that connection instant and transparent.</div>
+        </div>
+        <div class="info-card reveal" style="transition-delay:.12s">
+          <div class="ic-icon" style="background:rgba(22,163,74,.1)">🤝</div>
+          <div class="ic-title">Community First</div>
+          <div class="ic-desc">Donors earn reward points, NGOs get real-time updates, and delivery agents navigate with
+            live GPS — every role benefits from the platform.</div>
+        </div>
+        <div class="info-card reveal" style="transition-delay:.2s">
+          <div class="ic-icon" style="background:rgba(124,58,237,.1)">🔒</div>
+          <div class="ic-title">Transparent &amp; Secure</div>
+          <div class="ic-desc">Every donation is tracked from post to plate. Email notifications, live status updates,
+            and a 6-step tracker keep every stakeholder informed.</div>
+        </div>
+        <div class="info-card reveal" style="transition-delay:.28s">
+          <div class="ic-icon" style="background:rgba(217,119,6,.1)">📱</div>
+          <div class="ic-title">Works on Any Device</div>
+          <div class="ic-desc">Fully responsive across mobile, tablet and desktop. Donors post from their phone, agents
+            navigate on the go, admins manage from their desk.</div>
+        </div>
+      </div>
+      <div class="how-title reveal">⚙️ How It Works!</div>
+      <div class="flow-row reveal">
+        <div class="flow-card">
+          <div class="fc-n">01</div>
+          <div class="fc-arrow">→</div>
+          <div class="fc-icon" style="background:rgba(252,107,26,.1)">🤲</div>
+          <div class="fc-title">Donor Posts Food</div>
+          <div class="fc-badge" style="background:rgba(252,107,26,.1);color:var(--orange)">📍 GPS Auto-Capture</div>
+        </div>
+        <div class="flow-card">
+          <div class="fc-n">02</div>
+          <div class="fc-arrow">→</div>
+          <div class="fc-icon" style="background:rgba(217,119,6,.12)">🏢</div>
+          <div class="fc-title">Admin Accepts &amp; Assigns</div>
+          <div class="fc-badge" style="background:rgba(217,119,6,.1);color:var(--yellow)">⚡ Instant Assignment</div>
+        </div>
+        <div class="flow-card">
+          <div class="fc-n">03</div>
+          <div class="fc-icon" style="background:rgba(22,163,74,.1)">🚴</div>
+          <div class="fc-title">Agent Delivers Live</div>
+          <div class="fc-badge" style="background:rgba(22,163,74,.1);color:var(--green)">🗺️ Live Navigation</div>
+        </div>
+      </div>
+      <div class="track-panel reveal">
+        <div class="tp-title">📦 6-Step Delivery Tracker</div>
+        <div class="tp-sub">Every donation moves through 6 milestones — donors see every step in real-time</div>
+        <div class="track-row" id="trackBar">
+          <div class="t-step t-done" id="ts0">
+            <div class="t-dot" id="td0">✅</div>
+            <div class="t-lbl">Food<br>Posted</div>
+          </div>
+          <div class="t-step" id="ts1">
+            <div class="t-dot" id="td1">🏢</div>
+            <div class="t-lbl">NGO<br>Accepted</div>
+          </div>
+          <div class="t-step" id="ts2">
+            <div class="t-dot" id="td2">🚴</div>
+            <div class="t-lbl">Agent<br>Assigned</div>
+          </div>
+          <div class="t-step" id="ts3">
+            <div class="t-dot" id="td3">📍</div>
+            <div class="t-lbl">En<br>Route</div>
+          </div>
+          <div class="t-step" id="ts4">
+            <div class="t-dot" id="td4">📦</div>
+            <div class="t-lbl">Picked<br>Up</div>
+          </div>
+          <div class="t-step" id="ts5">
+            <div class="t-dot" id="td5">🎉</div>
+            <div class="t-lbl">Delivered!</div>
+          </div>
+        </div>
+      </div>
+      <div class="live-panel reveal">
+        <div class="lp-icon">🗺️</div>
+        <div class="lp-text">
+          <h3>Monitor Live Delivery Agent Tracking</h3>
+          <p>Watch your delivery agent navigate to the pickup location in real-time. Live route with ETA countdown —
+            both the donor and NGO admin can monitor exact position.</p>
+        </div>
+        <div class="lp-badge">
+          <div class="ldot"></div><span>GPS Live</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="announcements">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Latest Updates</div>
+        <h2 class="section-h2"><span class="hl">Announcements</span></h2>
+        <p class="section-lead" style="margin-bottom:36px">Stay updated with the latest news and milestones from
+          FeedForward.</p>
+      </div>
+      <div class="ticker-outer reveal">
+        <div class="ticker-label">📢 LIVE</div>
+        <div class="ticker-track">
+          <div class="ti"><span class="td"></span>🎉 FeedForward live in Vijayawada! <span class="ti-badge">New</span>
+          </div>
+          <div class="ti"><span class="td"></span>🍱 10,000 meals redistributed — thank you!</div>
+          <div class="ti"><span class="td"></span>📍 Live GPS tracking now available <span
+              class="ti-badge">Feature</span></div>
+          <div class="ti"><span class="td"></span>🚴 Recruiting delivery agents — join today!</div>
+          <div class="ti"><span class="td"></span>⭐ Reward points system launched <span class="ti-badge">New</span>
+          </div>
+          <div class="ti"><span class="td"></span>🏢 3 new NGO partners joined this month</div>
+          <div class="ti"><span class="td"></span>📱 Mobile dashboard now available</div>
+          <div class="ti"><span class="td"></span>🎉 FeedForward live in Vijayawada! <span class="ti-badge">New</span>
+          </div>
+          <div class="ti"><span class="td"></span>🍱 10,000 meals redistributed — thank you!</div>
+          <div class="ti"><span class="td"></span>📍 Live GPS tracking now available <span
+              class="ti-badge">Feature</span></div>
+          <div class="ti"><span class="td"></span>🚴 Recruiting delivery agents — join today!</div>
+          <div class="ti"><span class="td"></span>⭐ Reward points system launched <span class="ti-badge">New</span>
+          </div>
+          <div class="ti"><span class="td"></span>🏢 3 new NGO partners joined this month</div>
+          <div class="ti"><span class="td"></span>📱 Mobile dashboard now available</div>
+        </div>
+      </div>
+      <div class="ann-grid" id="annGrid">
+        <div class="ann-card" style="transition:opacity .5s .06s,transform .5s .06s">
+          <div class="ann-pill" style="background:rgba(252,107,26,.1);color:var(--orange)">🚀 Launch</div>
+          <div class="ann-title">FeedForward Goes Live in Vijayawada</div>
+          <div class="ann-body">FeedForward is officially live in Vijayawada, AP. Donors, NGOs and delivery agents can
+            now sign up and start making a difference today.</div>
+          <div class="ann-date">June 10, 2026</div>
+        </div>
+        <div class="ann-card" style="transition:opacity .5s .16s,transform .5s .16s">
+          <div class="ann-pill" style="background:rgba(217,119,6,.1);color:var(--yellow)">✨ Feature</div>
+          <div class="ann-title">Live GPS Navigation Now Available</div>
+          <div class="ann-body">Delivery agents now share real-time location while navigating. Donors and admins watch
+            the route live on an interactive map with ETA.</div>
+          <div class="ann-date">June 8, 2026</div>
+        </div>
+        <div class="ann-card" style="transition:opacity .5s .26s,transform .5s .26s">
+          <div class="ann-pill" style="background:rgba(22,163,74,.1);color:var(--green)">🏆 Milestone</div>
+          <div class="ann-title">10,000 Meals Successfully Redistributed</div>
+          <div class="ann-body">Thanks to our community of donors, NGO partners, and delivery agents, FeedForward has
+            redistributed over 10,000 meals to those in need.</div>
+          <div class="ann-date">June 5, 2026</div>
+        </div>
+        <div class="ann-card" style="transition:opacity .5s .36s,transform .5s .36s">
+          <div class="ann-pill" style="background:rgba(124,58,237,.1);color:var(--purple)">⭐ Rewards</div>
+          <div class="ann-title">Reward Points System Launched</div>
+          <div class="ann-body">Donors now earn points for every food donation. Climb from Seed to Legend — get
+            recognized for your contributions to the community.</div>
+          <div class="ann-date">June 2, 2026</div>
+        </div>
+        <div class="ann-card" style="transition:opacity .5s .46s,transform .5s .46s">
+          <div class="ann-pill" style="background:rgba(37,99,235,.1);color:var(--blue)">🤝 Partners</div>
+          <div class="ann-title">3 New NGO Partners Join This Month</div>
+          <div class="ann-body">We welcome three new NGO partners to the FeedForward network. More NGOs means food
+            reaches more communities faster than ever.</div>
+          <div class="ann-date">May 28, 2026</div>
+        </div>
+        <div class="ann-card" style="transition:opacity .5s .56s,transform .5s .56s">
+          <div class="ann-pill" style="background:rgba(252,107,26,.1);color:var(--orange)">🚴 Agents</div>
+          <div class="ann-title">Delivery Agent Recruitment Open</div>
+          <div class="ann-body">We are recruiting delivery agents across Vijayawada. Join FeedForward and help connect
+            food to those who need it most.</div>
+          <div class="ann-date">May 20, 2026</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Get In Touch</div>
+        <h2 class="section-h2">Contact <span class="hl">Us</span></h2>
+        <p class="section-lead">Questions, partnerships, or ready to join? Reach out — we respond within 24 hours.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="reveal-l">
+          <div class="ci-items">
+            <div class="ci-item">
+              <div class="ci-ico">📧</div>
+              <div>
+                <div class="ci-lbl">Email</div><a href="mailto:muralipatnala24@gmail.com"
+                  class="ci-val">muralipatnala24@gmail.com</a>
+              </div>
+            </div>
+            <div class="ci-item">
+              <div class="ci-ico">📞</div>
+              <div>
+                <div class="ci-lbl">Phone</div><a href="tel:+918919009613" class="ci-val">+91 89190 09613</a>
+              </div>
+            </div>
+            <div class="ci-item">
+              <div class="ci-ico">📍</div>
+              <div>
+                <div class="ci-lbl">Address</div>
+                <div class="ci-val">Kurmannapalem, Visakhapatnam,<br>Andhra Pradesh, India</div>
+              </div>
+            </div>
+            <div class="ci-item">
+              <div class="ci-ico">⏰</div>
+              <div>
+                <div class="ci-lbl">Response Time</div>
+                <div class="ci-val">Within 24 hours</div>
+              </div>
+            </div>
+          </div>
+          <div class="join-cta-box">
+            <h4>Join FeedForward Today</h4>
+            <p>Donor, NGO admin, or delivery agent — sign up and start making a difference.</p>
+            <a href="https://feedforward-web-client.onrender.com/login" class="btn btn-orange"
+              style="font-size:14px;padding:11px 22px">🚀 Get Started Free</a>
+          </div>
+        </div>
+        <div class="reveal-r">
+          <div class="cf-card">
+            <div class="cf-head">Send us a message</div>
+            <div class="cf-sub">Fill the form — we'll reply to you within 24 hours</div>
+            <form id="cForm" onsubmit="sendForm(event)">
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_template" value="box" />
+              <input type="hidden" name="_subject" value="New FeedForward Contact Message" />
+              <div class="form-row">
+                <div class="fg"><label class="fl">First Name *</label><input type="text" class="fi" id="fn"
+                    placeholder="Sai" required /></div>
+                <div class="fg"><label class="fl">Last Name</label><input type="text" class="fi" id="ln"
+                    placeholder="Kumar" /></div>
+              </div>
+              <div class="fg"><label class="fl">Email *</label><input type="email" class="fi" id="em"
+                  placeholder="you@example.com" required /></div>
+              <div class="fg"><label class="fl">Phone</label><input type="tel" class="fi" id="ph"
+                  placeholder="+91 98765 43210" /></div>
+              <div class="fg">
+                <label class="fl">I am interested as *</label>
+                <select class="fi" id="rl" required>
+                  <option value="">Select your role</option>
+                  <option>Food Donor</option>
+                  <option>NGO / Admin</option>
+                  <option>Delivery Agent</option>
+                  <option>Just curious</option>
+                </select>
+              </div>
+              <div class="fg"><label class="fl">Message *</label><textarea class="fi" id="ms"
+                  placeholder="Tell us how we can help..." required></textarea></div>
+              <button type="submit" class="btn-send" id="sbtn"><span id="sbtxt">📩 Send Message</span></button>
+              <div class="form-ok" id="fok">✅ Message sent! We'll reply within 24 hours.</div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="fl-logo">
+          <div class="fl-ico">🌱</div>
+          <div class="fl-name">FeedForward</div>
+        </div>
+        <div class="fl-copy">© 2026 FeedForward. Made with ❤️ to reduce food waste.</div>
+        <div class="fl-links">
+          <a href="#">Home</a>
+          <a href="#about">About</a>
+          <a href="#announcements">News</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', scrollY > 10);
+      ['about', 'announcements', 'contact'].forEach(id => {
+        const el = document.getElementById(id);
+        const lk = document.querySelector(`.nav-links a[href="#${id}"]`);
+        if (!el || !lk) return;
+        const r = el.getBoundingClientRect();
+        lk.classList.toggle('active', r.top <= 80 && r.bottom >= 80);
+      });
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function (e) {
+        const target = this.getAttribute('href');
+        if (!target || target === '#') return;
+        const section = document.querySelector(target);
+        if (!section) return;
+        e.preventDefault();
+        const navH = document.getElementById('navbar').offsetHeight;
+        const top = section.getBoundingClientRect().top + window.pageYOffset - navH;
+        window.scrollTo({ top, behavior: 'smooth' });
+        document.getElementById('mobMenu').classList.remove('open');
+        document.getElementById('ham').classList.remove('open');
+      });
+    });
+
+    const ham = document.getElementById('ham');
+    const mobMenu = document.getElementById('mobMenu');
+    ham.addEventListener('click', () => {
+      const open = mobMenu.classList.toggle('open');
+      ham.classList.toggle('open', open);
+    });
+
+    let cur = 0, tot = 4, timer;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.sdot');
+    function goTo(n) {
+      slides[cur].classList.remove('active'); dots[cur].classList.remove('active');
+      cur = (n + tot) % tot;
+      slides[cur].classList.add('active'); dots[cur].classList.add('active');
+      clearInterval(timer); timer = setInterval(() => goTo(cur + 1), 4500);
+    }
+    function nextSlide() { goTo(cur + 1); }
+    function prevSlide() { goTo(cur - 1); }
+    timer = setInterval(() => goTo(cur + 1), 4500);
+
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); ro.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal, .reveal-l, .reveal-r').forEach(el => ro.observe(el));
+
+    const ao = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.ann-card').forEach((c, i) => setTimeout(() => c.classList.add('ann-in'), i * 110));
+          ao.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('#annGrid').forEach(el => ao.observe(el));
+
+    let tStep = 0;
+    const tSteps = document.querySelectorAll('.t-step');
+    const icons = ['🌱', '🏢', '🚴', '📍', '📦', '🎉'];
+    tSteps[0].classList.add('t-done');
+    document.getElementById('td0').textContent = '✅';
+    function animTrack() {
+      tSteps.forEach((s, i) => {
+        const dot = s.querySelector('.t-dot');
+        s.classList.remove('t-done', 't-active');
+        if (i < tStep) { s.classList.add('t-done'); dot.textContent = '✅'; }
+        else if (i === tStep) { s.classList.add('t-active'); dot.textContent = icons[i]; }
+        else { dot.textContent = icons[i]; }
+      });
+      tStep = (tStep + 1) % 7;
+    }
+    setInterval(animTrack, 1100);
+
+    async function sendForm(e) {
+      e.preventDefault();
+      const btn = document.getElementById('sbtn');
+      const txt = document.getElementById('sbtxt');
+      const ok = document.getElementById('fok');
+      txt.textContent = '⏳ Sending…';
+      btn.disabled = true;
+      ok.className = 'form-ok';
+      const fname = document.getElementById('fn').value.trim();
+      const lname = document.getElementById('ln').value.trim();
+      const email = document.getElementById('em').value.trim();
+      const phone = document.getElementById('ph').value.trim() || 'Not provided';
+      const role = document.getElementById('rl').value;
+      const msg = document.getElementById('ms').value.trim();
+      const payload = new FormData();
+      payload.append('_to', 'muralipatnala24@gmail.com');
+      payload.append('_subject', `FeedForward Contact — ${fname} ${lname}`);
+      payload.append('_template', 'box');
+      payload.append('_captcha', 'false');
+      payload.append('_autoresponse', `Hi ${fname}, thanks for reaching out to FeedForward! We've received your message and will reply within 24 hours.`);
+      payload.append('Name', `${fname} ${lname}`);
+      payload.append('Email', email);
+      payload.append('Phone', phone);
+      payload.append('Role', role);
+      payload.append('Message', msg);
+      try {
+        const res = await fetch('https://formsubmit.co/ajax/muralipatnala24@gmail.com', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: payload
+        });
+        const data = await res.json();
+        if (data.success === 'true' || data.success === true) {
+          ok.style.cssText = '';
+          ok.innerHTML = '✅ Message sent successfully! We\'ll reply to <strong>' + email + '</strong> within 24 hours.';
+          ok.classList.add('show');
+          document.getElementById('cForm').reset();
+        } else { throw new Error('FormSubmit failed'); }
+      } catch (err) {
+        const sub = encodeURIComponent(`FeedForward Contact — ${fname} ${lname}`);
+        const body = encodeURIComponent(`Name   : ${fname} ${lname}\nEmail  : ${email}\nPhone  : ${phone}\nRole   : ${role}\n\nMessage:\n${msg}`);
+        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=muralipatnala24@gmail.com&su=${sub}&body=${body}`, '_blank');
+        ok.style.cssText = 'display:block;background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.25);color:#92400E;font-weight:600;font-size:14px;padding:14px;border-radius:12px;margin-top:14px;';
+        ok.textContent = '📧 Gmail has been opened in a new tab with your message pre-filled. Please click Send to reach us!';
+      }
+      txt.textContent = '📩 Send Message';
+      btn.disabled = false;
+    }
+  </script>
+</body>
+
+</html>
